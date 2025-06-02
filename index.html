@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Données IoT</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2rem; }
+        #data { margin-top: 1rem; background: #f4f4f4; padding: 1rem; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Données reçues depuis AWS IoT</h1>
+    <div id="data">Chargement des données...</div>
+
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('/iot-data');
+                const data = await response.json();
+                document.getElementById('data').textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('data').textContent = 'Erreur lors du chargement des données.';
+            }
+        }
+
+        setInterval(fetchData, 3000); // Rafraîchir toutes les 3 secondes
+        fetchData(); // Appel initial
+    </script>
+</body>
+</html>
