@@ -9,22 +9,34 @@
     </style>
 </head>
 <body>
-    <h1>Données reçues depuis AWS IoT</h1>
-    <div id="data">Chargement des données...</div>
+    <h1>📟 Valeur Modbus Live</h1>
+
+      <p>📅 Timestamp : <span id="timestamp">--</span></p>
+      <p>📈 Valeur : <span id="modbus">--</span></p>
+
+        <div id="data">Chargement des données...</div>
 
     <script>
-        async function fetchData() {
-            try {
-                const response = await fetch('/iot-data');
-                const data = await response.json();
-                document.getElementById('data').textContent = JSON.stringify(data, null, 2);
-            } catch (err) {
-                document.getElementById('data').textContent = 'Erreur lors du chargement des données.';
-            }
-        }
+        // async function fetchData() {
+        //     try {
+        //         const response = await fetch('/iot-data');
+        //         const data = await response.json();
+        //         document.getElementById('data').textContent = JSON.stringify(data, null, 2);
+        //     } catch (err) {
+        //         document.getElementById('data').textContent = 'Erreur lors du chargement des données.';
+        //     }
+        // }
 
-        setInterval(fetchData, 3000); // Rafraîchir toutes les 3 secondes
-        fetchData(); // Appel initial
+        // setInterval(fetchData, 3000); // Rafraîchir toutes les 3 secondes
+        // fetchData(); // Appel initial
+          const evtSource = new EventSource('/stream');
+
+    evtSource.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+
+      document.getElementById("timestamp").textContent = data.timestamp ?? '--';
+      document.getElementById("modbus").textContent = data.modbusValue?.toFixed(2) ?? '--';
+    };
     </script>
 </body>
 </html>
