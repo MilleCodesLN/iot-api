@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Lecture Modbus en direct</title>
+</head>
+<body>
+  <h1>📟 Valeur Modbus en direct</h1>
+
+  <p>⏱️ Timestamp : <span id="timestamp">--</span></p>
+  <p>📈 Valeur : <span id="modbus">--</span></p>
+
+  <script>
+    const evtSource = new EventSource('/stream');
+
+    evtSource.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      document.getElementById("timestamp").textContent = data.timestamp ?? '--';
+      document.getElementById("modbus").textContent = data.modbusValue?.toFixed(2) ?? '--';
+    };
+  </script>
+</body>
+</html>
